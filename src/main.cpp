@@ -6,7 +6,7 @@ void setup()
 
   setupSonar();
   setupMotors();
-  
+  setupRobotArm();
   Print_Menu();
 }
 
@@ -16,5 +16,7 @@ void loop()
   // changeSpeed(80,FORWARD);
   // autonomousEmergencyBrake();
    //adaptive_cruise_control(40,150,20,50);
-   LineTrackingFunction();
+   //LineTrackingFunction();
+  // moveObject();
+  moveObject();
 }

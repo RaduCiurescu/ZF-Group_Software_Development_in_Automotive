@@ -15,8 +15,8 @@
 *
 **************************************************************************************************/
 
-#define CAR1_PIXY 1
-#define CAR2_ARM 0
+#define CAR1_PIXY 0
+#define CAR2_ARM 1
 
 #if CAR1_PIXY == 1
 #define DISTANCE_SENSOR_TRIG_PIN A2

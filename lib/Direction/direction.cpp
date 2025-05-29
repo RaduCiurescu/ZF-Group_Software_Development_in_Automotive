@@ -1,7 +1,10 @@
-#include <Servo.h>
+
 #include <Arduino.h>
+#include <Servo.h>
 #include "direction.h"
 #include "sonar.h"
+
+Servo base_servo, arm_servo,claw_servo;
 
 int before=0;
 /**************************************************************************************************
@@ -336,37 +339,39 @@ void LineTrackingFunction()
     int centerSensor = digitalRead(8);
     int rightSensor = digitalRead(A1);
 
-    Serial.print("Left:");
-    Serial.println(leftSensor);
-    Serial.print("Center:");
-    Serial.println(centerSensor);
-    Serial.print("Right:");
-    Serial.println(rightSensor);
+    // Serial.print("Left:");
+    // Serial.println(leftSensor);
+    // Serial.print("Center:");
+    // Serial.println(centerSensor);
+    // Serial.print("Right:");
+    // Serial.println(rightSensor);
 
     if(centerSensor == LOW && leftSensor == LOW && rightSensor == LOW)
     {
         if(previousLeft)
-            Rotate_Left(80);
+            Rotate_Left(60);
         else if(previousRight)
-            Rotate_Right(80);
+            Rotate_Right(60);
+        else
+            Rotate_Right(60);
     }
     else
     {
-    if(centerSensor == LOW && leftSensor == HIGH && rightSensor == LOW)
-        Rotate_Left(80);
+    if(centerSensor == LOW && leftSensor == HIGH && rightSensor == LOW) //left 
+        Rotate_Left(60);
 
-    if(centerSensor == HIGH && leftSensor == HIGH && rightSensor == LOW)
-        Rotate_Left(80);
+    if(centerSensor == HIGH && leftSensor == HIGH && rightSensor == LOW) //left center
+        Rotate_Left(60);
 
-    if(centerSensor == HIGH && leftSensor == LOW && rightSensor == HIGH)
-        Rotate_Right(80);
+    if(centerSensor == HIGH && leftSensor == LOW && rightSensor == HIGH) //right center
+        Rotate_Right(60);
 
-    if(centerSensor == LOW && leftSensor == LOW && rightSensor == HIGH)
-        Rotate_Right(80);
+    if(centerSensor == LOW && leftSensor == LOW && rightSensor == HIGH) //right
+        Rotate_Right(60);
 
-    if(centerSensor == HIGH)
+    if(centerSensor == HIGH) //intersectie/ default
     {
-        Move_Forward(40);
+        Move_Forward(70);
         previousLeft = 0;
         previousRight = 0;
     }
@@ -380,3 +385,118 @@ void LineTrackingFunction()
     
 }
     
+
+/**************************************************************************************************
+                              FUNCTION INFO
+NAME:
+    setupRobotArm
+
+DESCRIPTION:
+   setup robot smotors
+**************************************************************************************************/
+
+
+void setupRobotArm()
+{
+  #if CAR1_PIXY == 1
+    base_servo.attach(9);
+  #endif
+
+  #if CAR2_ARM == 1
+    base_servo.attach(10);
+    arm_servo.attach(9);
+    claw_servo.attach(11);
+
+    base_servo.write(90);
+    claw_servo.write(0);
+    arm_servo.write(0);
+  #endif
+
+
+
+  
+}
+
+
+/**************************************************************************************************
+                              FUNCTION INFO
+NAME:
+    moveObject
+
+DESCRIPTION:
+    Follows the line with the car.
+**************************************************************************************************/
+
+void moveObject()
+{
+
+    for(int i=0; i<=90;i++) //apleaca bratu
+    {
+        arm_servo.write(i);
+        claw_position=i;
+        delay(20);
+    }
+    for(int i=0; i<=100;i++) //inchide claw
+    {
+        claw_servo.write(i);
+        claw_position=i;
+        delay(20);
+    }
+    for(int i=90; i>0;i--)  //ridica bratu
+    {
+        arm_position=i;
+        arm_servo.write(i);
+        delay(20);
+    }
+    for(int i=90; i<=180;i++) //roteste baseu
+    {
+        base_position=1;
+        base_servo.write(i);
+        delay(20);
+    }
+    for(int i=0; i<=90;i++) //apleaca bratu
+    {
+        arm_position=i;
+        arm_servo.write(i);
+        delay(20);
+    }
+    for(int i=100; i>0;i--) //inchide claw
+    {
+        claw_position=i;
+        claw_servo.write(i);
+        delay(20);
+    }
+    for(int i=90; i>0;i--)  //ridica bratu
+    {
+        arm_position=i;
+        arm_servo.write(i);
+        delay(20);
+    }
+    for(int i=180; i>=90;i--) //roteste baseu
+    {
+        base_position=1;
+        base_servo.write(i);
+        delay(20);
+    }
+}
+
+/**************************************************************************************************
+                              FUNCTION INFO
+NAME:
+    resetRobotArm
+
+DESCRIPTION:
+    Resets the arm
+**************************************************************************************************/
+void resetRobotArm()
+{
+    for(int i=180; i>=90;i--) //roteste baseu
+    {
+        base_servo.write(i);
+        delay(20);
+    }
+    claw_servo.write(0); // 0 deschis 100 inchis
+    delay(1000);
+    arm_servo.write(0);  /// 0 sus// 90 in fata
+    delay(1000);
+}

@@ -6,7 +6,6 @@
 *   INCLUDES
 *
 **************************************************************************************************/
-
 #include <Arduino.h>
 /**************************************************************************************************
 *
@@ -31,9 +30,11 @@
 
 static int DC_PWM_Value;
 static float distance;
-
 static int previousLeft = 0;
 static int previousRight = 0;
+static int base_position = 90;
+static int claw_position = 0;
+static int arm_position = 0;
 //static float last_distance;
 //static float last_speed;
 //bool keep_speed=false;
@@ -57,5 +58,7 @@ void    adaptive_cruise_control(uint8_t, uint8_t, uint8_t, uint16_t);
 int     checkPWM(uint8_t, int, int);
 void    changeSpeed(uint8_t, uint8_t);
 void    LineTrackingFunction();
-
+void    setupRobotArm();
+void    moveObject();
+void    resetRobotArm();
 #endif

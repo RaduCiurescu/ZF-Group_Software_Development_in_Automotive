@@ -2,7 +2,6 @@
 #include "sonar.h"
 #include "MovingAverage.h"
 
-
 float currentMillis,startMillis=0;
 MovingAverage avg(3);
 /**************************************************************************************************
